@@ -1,59 +1,165 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<div align="center">
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+  <img src="https://img.shields.io/badge/68Hosting-Academic_Platform-indigo?style=for-the-badge&logo=laravel" alt="68Hosting Banner" width="100%" />
 
-## About Laravel
+  # 🚀 68Hosting
+  ### Academic & Professional Static Hosting Platform
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+  <p align="center">
+    <a href="#features">Fitur</a> •
+    <a href="#tech-stack">Teknologi</a> •
+    <a href="#installation">Instalasi</a> •
+    <a href="#workflow">Workflow</a> •
+    <a href="#license">Lisensi</a>
+  </p>
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+  ![Laravel](https://img.shields.io/badge/Laravel-12.0-FF2D20?style=flat-square&logo=laravel)
+  ![PHP](https://img.shields.io/badge/PHP-8.2-777BB4?style=flat-square&logo=php)
+  ![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.0-38B2AC?style=flat-square&logo=tailwind-css)
+  ![Alpine.js](https://img.shields.io/badge/Alpine.js-3.0-8BC0D0?style=flat-square&logo=alpine.js)
+  ![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?style=flat-square&logo=mysql)
+  ![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+</div>
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## 📖 Tentang Project
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+**68Hosting** adalah platform hosting modern yang dirancang khusus untuk kebutuhan akademisi dan mahasiswa. Platform ini memungkinkan pengguna untuk mempublikasikan website statis (HTML, CSS, JS) dengan mudah, cepat, dan aman.
 
-## Laravel Sponsors
+Dibangun dengan **Laravel 12** dan **Tailwind CSS**, 68Hosting menawarkan antarmuka yang elegan, responsif, dan profesional. Sistem ini dilengkapi dengan fitur manajemen order, validasi pembayaran, dan manajemen user yang komprehensif.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+## ✨ Fitur Unggulan
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### 🎨 User Interface & Experience
+- **Desain Premium & Modern**: Menggunakan font *Plus Jakarta Sans* dan palet warna Indigo/Slate yang profesional.
+- **Fully Responsive**: Tampilan optimal di Desktop, Tablet, dan Mobile.
+- **Interactive UI**: Animasi halus menggunakan Alpine.js dan transisi CSS.
+- **Light Mode Enforced**: Tampilan bersih dan konsisten dengan mode terang permanen.
 
-## Contributing
+### 🚀 Hosting & Deployment
+- **Static Site Hosting**: Dukungan penuh untuk file HTML, CSS, dan JavaScript.
+- **Custom Subdomain**: Pengguna mendapatkan subdomain unik `*.zone.id`.
+- **Live Preview**: Fitur untuk melihat tampilan website sebelum dipublikasikan.
+- **File Validation**: Keamanan file upload untuk mencegah script berbahaya.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 👮 Administrator Dashboard
+- **User Management**: CRUD (Create, Read, Update, Delete) user lengkap.
+- **Order Management**: Verifikasi pesanan, bukti pembayaran, dan status project.
+- **Admin Notes**: Sistem catatan internal untuk komunikasi antar admin mengenai order tertentu.
+- **Project Download**: Admin dapat mendownload source code project user untuk verifikasi manual.
 
-## Code of Conduct
+### 💳 Sistem Pembayaran & Order
+- **QRIS & Virtual Account**: Simulasi pembayaran modern.
+- **Status Tracking**: Pelacakan status order real-time (Pending, Paid, Approved, Rejected).
+- **WhatsApp Integration**: Link langsung ke WhatsApp user untuk konfirmasi cepat.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+## 🛠️ Tech Stack
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Project ini dibangun menggunakan teknologi terkini untuk memastikan performa dan keamanan maksimal:
 
-## License
+| Kategori | Teknologi | Deskripsi |
+| :--- | :--- | :--- |
+| **Backend** | Laravel 12 | Framework PHP modern dan robust. |
+| **Frontend** | Blade & Tailwind CSS | Styling utility-first yang cepat dan elegan. |
+| **Interactivity** | Alpine.js | Framework JS ringan untuk interaksi UI. |
+| **Database** | MySQL | Penyimpanan data relasional yang handal. |
+| **Auth** | Laravel Breeze | Sistem autentikasi yang aman dan simpel. |
+| **Icons** | Heroicons | Set ikon SVG yang bersih dan konsisten. |
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---
+
+## ⚙️ Instalasi & Setup
+
+Ikuti langkah-langkah berikut untuk menjalankan project di komputer lokal Anda:
+
+### Prasyarat
+- PHP >= 8.2
+- Composer
+- Node.js & NPM
+- MySQL
+
+### Langkah-langkah
+
+1.  **Clone Repository**
+    ```bash
+    git clone https://github.com/username/68hosting-app.git
+    cd 68hosting-app
+    ```
+
+2.  **Install Dependencies**
+    ```bash
+    composer install
+    npm install
+    ```
+
+3.  **Setup Environment**
+    ```bash
+    cp .env.example .env
+    php artisan key:generate
+    ```
+
+4.  **Konfigurasi Database**
+    Buat database baru di MySQL, lalu sesuaikan file `.env`:
+    ```env
+    DB_CONNECTION=mysql
+    DB_HOST=127.0.0.1
+    DB_PORT=3306
+    DB_DATABASE=68hosting_db
+    DB_USERNAME=root
+    DB_PASSWORD=
+    ```
+
+5.  **Migrasi & Seeding**
+    Jalankan migrasi database dan isi data awal (termasuk akun admin):
+    ```bash
+    php artisan migrate:fresh --seed
+    ```
+
+6.  **Jalankan Aplikasi**
+    Buka dua terminal terpisah untuk menjalankan server Laravel dan Vite:
+    ```bash
+    # Terminal 1
+    php artisan serve
+
+    # Terminal 2
+    npm run dev
+    ```
+
+7.  **Akses Aplikasi**
+    Buka browser dan kunjungi `http://localhost:8000`.
+
+---
+
+## 🔑 Akun Default
+
+Gunakan akun berikut untuk mengakses fitur administrator:
+
+| Role | Email | Password |
+| :--- | :--- | :--- |
+| **Administrator** | `admin@68hosting.zone.id` | `password` |
+
+> **Catatan:** Jangan lupa untuk mengganti password setelah login pertama kali demi keamanan.
+
+---
+
+## 🔄 Workflow Sistem
+
+1.  **Registrasi**: User mendaftar akun baru.
+2.  **Order Hosting**: User mengisi form order, memilih subdomain, dan mengupload file project (ZIP).
+3.  **Pembayaran**: User melakukan pembayaran dan mengupload bukti transfer.
+4.  **Verifikasi Admin**: Admin menerima notifikasi, memeriksa bukti bayar, dan memverifikasi file project.
+5.  **Aktivasi**: Jika valid, admin menyetujui order. Status berubah menjadi `Approved`.
+6.  **Live**: Website user aktif dan dapat diakses melalui subdomain yang dipilih.
+
+---
+
+<div align="center">
+  <p>Dibuat dengan ❤️ dan ☕ di Bengkulu</p>
+  <p>&copy; 2025 68Hosting. All Rights Reserved.</p>
+</div>
