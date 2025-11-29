@@ -18,11 +18,9 @@ class AdminSeeder extends Seeder
             'name' => 'Admin 68Hosting',
             'email' => 'admin@68hosting.zone.id',
             'password' => Hash::make('password'),
+            'role' => 'admin',
             'email_verified_at' => now(),
         ]);
-
-        // Assign admin role
-        $admin->assignRole('admin');
 
         $this->command->info('✅ Admin user created successfully!');
         $this->command->info('📧 Email: admin@68hosting.zone.id');
