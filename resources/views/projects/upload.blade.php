@@ -497,7 +497,7 @@
                 });
 
                 if (response.status === 413) {
-                    throw new Error('File terlalu besar. Server menolak permintaan (Error 413). Mohon periksa konfigurasi "client_max_body_size" pada Nginx atau upload file yang lebih kecil.');
+                    throw new Error('File terlalu besar total keseluruhan melebihi 10MB. Upload file yang lebih kecil.');
                 }
 
                 if (!response.ok) {
