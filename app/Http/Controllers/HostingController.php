@@ -12,7 +12,7 @@ class HostingController extends Controller
     /**
      * Serve hosted website files
      */
-    public function serve($domainName, Request $request)
+    public function serve($domainName, $path = null)
     {
         // Find active domain
         $domain = Domain::where('domain_name', $domainName)
@@ -22,10 +22,8 @@ class HostingController extends Controller
 
         $project = $domain->project;
 
-        // Get requested path (default to index.html)
-        $path = $request->path();
-        $path = str_replace("hosting/{$domainName}", '', $path);
-        $path = trim($path, '/') ?: 'index.html';
+        // Default to index.html if path is empty
+        $path = $path ?: 'index.html';
 
         // Build full file path
         $fullPath = storage_path("app/{$project->final_path}/{$path}");
@@ -40,11 +38,43 @@ class HostingController extends Controller
 
         // Check if file exists
         if (!File::exists($realPath) || File::isDirectory($realPath)) {
-            abort(404, 'File not found');
+            $found = false;
+
+            // Fallback: Try to find the file in the root if it was requested in a subdirectory
+            if (!$found) {
+                $basename = basename($path);
+                $rootPath = $basePath . '/' . $basename;
+                if (File::exists($rootPath) && !File::isDirectory($rootPath)) {
+                    $realPath = $rootPath;
+                    $found = true;
+                }
+            }
+
+            if (!$found) {
+                abort(404, 'File not found');
+            }
         }
 
         // Get MIME type
-        $mimeType = File::mimeType($realPath);
+        $extension = strtolower(pathinfo($realPath, PATHINFO_EXTENSION));
+        $mimeTypes = [
+            'html' => 'text/html',
+            'css' => 'text/css',
+            'js' => 'application/javascript',
+            'json' => 'application/json',
+            'png' => 'image/png',
+            'jpg' => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'gif' => 'image/gif',
+            'svg' => 'image/svg+xml',
+            'ico' => 'image/x-icon',
+            'woff' => 'font/woff',
+            'woff2' => 'font/woff2',
+            'ttf' => 'font/ttf',
+            'otf' => 'font/otf',
+        ];
+
+        $mimeType = $mimeTypes[$extension] ?? File::mimeType($realPath);
 
         // Serve file with appropriate headers
         return Response::file($realPath, [

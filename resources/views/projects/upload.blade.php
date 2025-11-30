@@ -30,6 +30,19 @@
     <div class="py-12" x-data="{ tutorialOpen: false }" @open-tutorial.window="tutorialOpen = true">
         <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
 
+            <div id="js-error-alert"
+                class="hidden mb-8 bg-rose-50 dark:bg-rose-900/20 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-400 px-4 py-4 rounded-xl flex items-start gap-3 shadow-sm animate-fade-in-down">
+                <svg class="w-5 h-5 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <div>
+                    <h4 class="font-bold">Upload Gagal</h4>
+                    <ul id="js-error-list" class="list-disc list-inside text-sm mt-1 opacity-90">
+                    </ul>
+                </div>
+            </div>
+
             @if($errors->any())
                 <div
                     class="mb-8 bg-rose-50 dark:bg-rose-900/20 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-400 px-4 py-4 rounded-xl flex items-start gap-3 shadow-sm animate-fade-in-down">
@@ -150,7 +163,7 @@
                                         <p class="mb-2 text-sm text-slate-600 dark:text-slate-300 font-medium">Click to
                                             upload or drag and drop</p>
                                         <p class="text-xs text-slate-500 dark:text-slate-400">HTML, CSS, JS, Images,
-                                            Fonts (Max 50MB)</p>
+                                            Fonts (Max 10MB)</p>
                                     </div>
                                     <input type="file" name="files[]" id="files-input" multiple class="hidden"
                                         accept=".html,.css,.js,.jpg,.jpeg,.png,.gif,.svg,.webp,.ico,.woff,.woff2,.ttf,.otf,.json" />
@@ -208,7 +221,7 @@
                                 </div>
                                 <div class="flex items-center gap-2">
                                     <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
-                                    Maksimal ukuran total 50MB
+                                    Maksimal ukuran total 10MB
                                 </div>
                                 <div class="flex items-center gap-2">
                                     <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
@@ -329,6 +342,11 @@
             document.getElementById('files-list').innerHTML = '';
             document.getElementById('zip-info').innerHTML = '';
 
+            // Reset global transfer
+            if (window.fileTransfer) {
+                window.fileTransfer.items.clear();
+            }
+
             if (method === 'files') {
                 filesDiv.classList.remove('hidden');
                 setTimeout(() => { filesDiv.classList.remove('opacity-0', 'scale-95'); }, 10);
@@ -350,14 +368,40 @@
             return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
         }
 
+        // Global DataTransfer object to store files
+        const fileTransfer = new DataTransfer();
+
         // Individual Files Listener
         document.getElementById('files-input')?.addEventListener('change', function (e) {
+            // Add new files to the DataTransfer object
+            Array.from(this.files).forEach(file => {
+                // Check for duplicates based on name
+                let exists = false;
+                for (let i = 0; i < fileTransfer.items.length; i++) {
+                    if (fileTransfer.items[i].getAsFile().name === file.name) {
+                        exists = true;
+                        break;
+                    }
+                }
+                if (!exists) {
+                    fileTransfer.items.add(file);
+                }
+            });
+
+            // Update the input's files property
+            this.files = fileTransfer.files;
+
+            // Render the list
+            renderFilesList();
+        });
+
+        function renderFilesList() {
             const filesList = document.getElementById('files-list');
             filesList.innerHTML = '';
 
-            if (this.files.length > 0) {
+            if (fileTransfer.files.length > 0) {
                 let html = '';
-                Array.from(this.files).forEach(file => {
+                Array.from(fileTransfer.files).forEach((file, index) => {
                     html += `
                         <div class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-700/50 rounded-lg border border-slate-200 dark:border-slate-700">
                             <div class="flex items-center gap-3 overflow-hidden">
@@ -366,13 +410,38 @@
                                 </svg>
                                 <span class="text-sm text-slate-700 dark:text-slate-300 truncate font-medium">${file.name}</span>
                             </div>
-                            <span class="text-xs text-slate-500 dark:text-slate-400 font-mono whitespace-nowrap ml-2">${formatBytes(file.size)}</span>
+                            <div class="flex items-center gap-3">
+                                <span class="text-xs text-slate-500 dark:text-slate-400 font-mono whitespace-nowrap">${formatBytes(file.size)}</span>
+                                <button type="button" onclick="removeFile(${index})" class="text-slate-400 hover:text-rose-500 transition-colors">
+                                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
                     `;
                 });
                 filesList.innerHTML = html;
             }
-        });
+        }
+
+        // Make removeFile available globally
+        window.removeFile = function (index) {
+            const newTransfer = new DataTransfer();
+            Array.from(fileTransfer.files).forEach((file, i) => {
+                if (i !== index) {
+                    newTransfer.items.add(file);
+                }
+            });
+
+            // Clear and update global transfer
+            fileTransfer.items.clear();
+            Array.from(newTransfer.files).forEach(file => fileTransfer.items.add(file));
+
+            // Update input and UI
+            document.getElementById('files-input').files = fileTransfer.files;
+            renderFilesList();
+        }
 
         // ZIP File Listener
         document.getElementById('zip-input')?.addEventListener('change', function (e) {
@@ -397,6 +466,86 @@
                         <span class="text-sm font-mono font-bold text-indigo-600 dark:text-indigo-400">${formatBytes(file.size)}</span>
                     </div>
                 `;
+            }
+        });
+
+        // AJAX Form Submission
+        document.getElementById('uploadForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            const errorAlert = document.getElementById('js-error-alert');
+            const errorList = document.getElementById('js-error-list');
+
+            // Reset error
+            if (errorAlert) errorAlert.classList.add('hidden');
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<svg class="animate-spin h-5 w-5 text-white inline-block mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Uploading...';
+
+            const formData = new FormData(this);
+
+            try {
+                const response = await fetch(this.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (response.status === 413) {
+                    throw new Error('File terlalu besar. Server menolak permintaan (Error 413). Mohon periksa konfigurasi "client_max_body_size" pada Nginx atau upload file yang lebih kecil.');
+                }
+
+                if (!response.ok) {
+                    let errorMsg = 'Upload gagal';
+                    try {
+                        const data = await response.json();
+                        if (data.errors) {
+                            errorMsg = Object.values(data.errors).flat().join('<br>');
+                        } else if (data.message) {
+                            errorMsg = data.message;
+                        }
+                    } catch (e) {
+                        errorMsg = `Upload gagal dengan status: ${response.status}`;
+                    }
+                    throw new Error(errorMsg);
+                }
+
+                // Success - Redirect
+                // If response is JSON (Laravel might return JSON if we asked for it and it was successful? 
+                // Actually Laravel redirect response is 302, fetch follows it and returns 200 with new page content)
+                // We can check response.url
+                if (response.url && response.url !== this.action) {
+                    window.location.href = response.url;
+                } else {
+                    // If we got JSON response with redirect url
+                    try {
+                        const data = await response.json();
+                        if (data.redirect) {
+                            window.location.href = data.redirect;
+                            return;
+                        }
+                    } catch (e) { }
+
+                    // Fallback
+                    window.location.reload();
+                }
+
+            } catch (error) {
+                if (errorAlert && errorList) {
+                    errorList.innerHTML = `<li>${error.message}</li>`;
+                    errorAlert.classList.remove('hidden');
+                    // Scroll to error
+                    errorAlert.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                } else {
+                    alert(error.message);
+                }
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
             }
         });
     </script>

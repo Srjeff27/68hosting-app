@@ -12,7 +12,7 @@ class PreviewController extends Controller
     /**
      * Serve preview files
      */
-    public function show($token, Request $request)
+    public function show($token, $path = null)
     {
         // Find project by token
         $project = Project::where('preview_token', $token)->firstOrFail();
@@ -22,10 +22,8 @@ class PreviewController extends Controller
             abort(410, 'Preview has expired');
         }
 
-        // Get requested path (default to index.html)
-        $path = $request->path();
-        $path = str_replace("preview/{$token}", '', $path);
-        $path = trim($path, '/') ?: 'index.html';
+        // Default to index.html if path is empty
+        $path = $path ?: 'index.html';
 
         // Build full file path
         $fullPath = storage_path("app/{$project->temp_path}/{$path}");
@@ -40,22 +38,54 @@ class PreviewController extends Controller
 
         // Check if file exists
         if (!File::exists($realPath)) {
+            $found = false;
+
             // Try in subdirectory (common ZIP structure)
             $directories = File::directories($basePath);
             if (count($directories) === 1) {
                 $subPath = $directories[0] . '/' . $path;
                 if (File::exists($subPath)) {
                     $realPath = $subPath;
-                } else {
-                    abort(404, 'File not found');
+                    $found = true;
                 }
-            } else {
+            }
+
+            // Fallback: Try to find the file in the root if it was requested in a subdirectory
+            // This handles cases where users upload flat files but index.html references folders (e.g. css/style.css -> style.css)
+            if (!$found) {
+                $basename = basename($path);
+                $rootPath = $basePath . '/' . $basename;
+                if (File::exists($rootPath)) {
+                    $realPath = $rootPath;
+                    $found = true;
+                }
+            }
+
+            if (!$found) {
                 abort(404, 'File not found');
             }
         }
 
         // Get MIME type
-        $mimeType = File::mimeType($realPath);
+        $extension = strtolower(pathinfo($realPath, PATHINFO_EXTENSION));
+        $mimeTypes = [
+            'html' => 'text/html',
+            'css' => 'text/css',
+            'js' => 'application/javascript',
+            'json' => 'application/json',
+            'png' => 'image/png',
+            'jpg' => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'gif' => 'image/gif',
+            'svg' => 'image/svg+xml',
+            'ico' => 'image/x-icon',
+            'woff' => 'font/woff',
+            'woff2' => 'font/woff2',
+            'ttf' => 'font/ttf',
+            'otf' => 'font/otf',
+        ];
+
+        $mimeType = $mimeTypes[$extension] ?? File::mimeType($realPath);
 
         // Serve file with security headers
         return Response::file($realPath, [

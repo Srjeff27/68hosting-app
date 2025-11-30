@@ -38,8 +38,8 @@ class ProjectController extends Controller
     {
         $request->validate([
             'files' => 'nullable|array',
-            'files.*' => 'file|max:51200', // 50MB per file
-            'zip_file' => 'nullable|file|mimes:zip|max:51200',
+            'files.*' => 'file|max:10240', // 10MB per file
+            'zip_file' => 'nullable|file|mimes:zip|max:10240',
         ]);
 
         try {
